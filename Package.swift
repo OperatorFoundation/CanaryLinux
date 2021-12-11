@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/OperatorFoundation/AdversaryLabClientSwift",
-                 from: "0.3.12"),
+                 from: "0.3.16"),
         .package(url: "https://github.com/OperatorFoundation/Chord.git",
                  from: "0.0.15"),
         .package(url: "https://github.com/OperatorFoundation/Datable",
@@ -26,7 +26,7 @@ let package = Package(
         .package(url: "https://github.com/OperatorFoundation/ShadowSwift.git",
                  from: "2.1.1"),
         .package(url: "https://github.com/apple/swift-argument-parser.git",
-                 from: "1.0.2"),
+                 from: "0.4.1"),
         .package(url: "https://github.com/apple/swift-log.git",
                  from: "1.4.2"),
         .package(name: "NetUtils", url: "https://github.com/OperatorFoundation/swift-netutils.git",
