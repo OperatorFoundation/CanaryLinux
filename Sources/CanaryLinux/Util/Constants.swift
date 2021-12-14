@@ -7,7 +7,7 @@ let configPathKey = "ConfigPath"
 var uiLog = Logger(label: "org.OperatorFoundation.CanaryDesktopUI", factory: CanaryLogHandler.init)
 var globalRunningLog = RunningLog()
 
-class RunningLog: ObservableObject
+class RunningLog
 {
-    @Published var logString: String = ""
+    var logString: String = ""
 }
