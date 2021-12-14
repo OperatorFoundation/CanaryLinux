@@ -23,10 +23,12 @@
 import ArgumentParser
 import Foundation
 
-import Gardener
+import Canary
 import NetUtils
+
+#if os(Linux)
 import Glibc
-import Transmission
+#endif
 
 struct CanaryTest: ParsableCommand
 {
@@ -55,17 +57,13 @@ struct CanaryTest: ParsableCommand
     ///  a csv file and song data (zipped) are saved with the test results.
     func run()
     {
-        if let rPath = resourceDirPath
-        {
-            resourcesDirectoryPath = rPath
-            print("\nUser selected resources directory: \(resourcesDirectoryPath)")
-        }
+        guard let rPath = resourceDirPath
         else
         {
-            resourcesDirectoryPath = "\(FileManager.default.currentDirectoryPath)/Sources/Resources"
-            print("\nYou did not indicate a preferred resources directory, using the default directory: \(resourcesDirectoryPath)")
+            print("\nPlease include your config file path")
+            return
         }
-        
+                
         // Make sure we have everything we need first
         guard checkSetup() else { return }
         
@@ -85,28 +83,9 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        for i in 1...numberOfTimesToRun
-        {
-            print("\n***************************\nRunning test batch \(i) of \(numberOfTimesToRun)\n***************************")
-            
-            for transport in allTransports
-            {
-                print("\n 🧪 Starting test for \(transport.name) 🧪\n")
-                TestController.sharedInstance.test(name: transport.name, serverIPString: serverIP, port: transport.port, interface: interfaceName, webAddress: nil)
-            }
-            
-            for webTest in allWebTests
-            {
-                print("\n 🧪 Starting web test for \(webTest.website) 🧪\n")
-                TestController.sharedInstance.test(name: webTest.name, serverIPString: serverIP, port: webTest.port, interface: interfaceName, webAddress: webTest.website)
-            }
-            
-            // This directory contains our test results.
-            zipResults()
-        }
+        let canary = Canary(serverIP: serverIP, configPath: rPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false)
         
-        ShapeshifterController.sharedInstance.killAllShShifter()
-        print("\nCanary tests are complete.\n")
+        canary.runTest()
     }
     
     func guessUserInterface() -> String?
@@ -156,77 +135,64 @@ struct CanaryTest: ParsableCommand
         }
         
         // Is the transport server running
-        if !allTransports.isEmpty
-        {
-            guard let _ = Transmission.Connection(host: serverIP, port: Int(string: allTransports[0].port), type: .tcp)
-            else
-            {
-                print("Failed to connect to the transport server.")
-                return false
-            }
-        }
+//        if !allTransports.isEmpty
+//        {
+//            guard let _ = Transmission.Connection(host: serverIP, port: Int(string: allTransports[0].port), type: .tcp)
+//            else
+//            {
+//                print("Failed to connect to the transport server.")
+//                return false
+//            }
+//        }
         
         // Does the Resources Directory Exist
-        guard FileManager.default.fileExists(atPath: resourcesDirectoryPath)
+        
+        guard let rPath = resourceDirPath
         else
         {
-            print("Resource directory does not exist at \(resourcesDirectoryPath).")
+            print("\nPlease include your config file path")
+            return false
+        }
+        
+        guard FileManager.default.fileExists(atPath: rPath)
+        else
+        {
+            print("Resource directory does not exist at \(rPath).")
             return false
         }
         
         // Does it contain the files we need
         // One config for every transport being tested
-        for transport in allTransports
-        {
-            switch transport
-            {
-            case obfs4:
-                guard FileManager.default.fileExists(atPath: "\(resourcesDirectoryPath)/\(obfs4FilePath)")
-                else
-                {
-                    print("obfs4 config not found at \(resourcesDirectoryPath)/\(obfs4FilePath)")
-                    return false
-                }
-            case obfs4iatMode:
-                guard FileManager.default.fileExists(atPath: "\(resourcesDirectoryPath)/\(obfs4iatFilePath)")
-                else
-                {
-                    print("obfs4 config not found at \(resourcesDirectoryPath)/\(obfs4iatFilePath)")
-                    return false
-                }
-            case shadowsocks:
-                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(shSocksFilePath)")
-                else
-                {
-                    print("Shadowsocks config not found at \(resourcesDirectoryPath)/\(shSocksFilePath)")
-                    return false
-                }
-            case meek:
-                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(meekOptionsPath)")
-                else
-                {
-                    print("meek config not found at \(resourcesDirectoryPath)/\(meekOptionsPath)")
-                    return false
-                }
-            case replicant:
-                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(replicantFilePath)")
-                else
-                {
-                    print("Replicant config not found at \(resourcesDirectoryPath)/\(replicantFilePath)")
-                    return false
-                }
-            default:
-                print("Tried to test a transport that has no config file. Transport name: \(transport.name)")
-            }
-        }
+//        for transport in allTransports
+//        {
+//            switch transport
+//            {
+//            case shadowsocks:
+//                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(shSocksFilePath)")
+//                else
+//                {
+//                    print("Shadowsocks config not found at \(resourcesDirectoryPath)/\(shSocksFilePath)")
+//                    return false
+//                }
+//            case replicant:
+//                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(replicantFilePath)")
+//                else
+//                {
+//                    print("Replicant config not found at \(resourcesDirectoryPath)/\(replicantFilePath)")
+//                    return false
+//                }
+//            default:
+//                print("Tried to test a transport that has no config file. Transport name: \(transport.name)")
+//            }
+//        }
         
         // If this is Ubuntu, do we have the shapeshifter binary that we need
-        guard FileManager.default.fileExists(atPath: "\(resourcesDirectoryPath)/\(shShifterResourcePath)")
-        else
-        {
-            print("Shapeshifter binary was not found at \(resourcesDirectoryPath)/\(shShifterResourcePath). Shapeshifter Dispatcher is required in order to run Canary on Linux systems.")
-            return false
-        }
+//        guard FileManager.default.fileExists(atPath: "\(resourcesDirectoryPath)/\(shShifterResourcePath)")
+//        else
+//        {
+//            print("Shapeshifter binary was not found at \(resourcesDirectoryPath)/\(shShifterResourcePath). Shapeshifter Dispatcher is required in order to run Canary on Linux systems.")
+//            return false
+//        }
         
         return true
     }
@@ -239,10 +205,6 @@ signal(SIGINT)
     (theSignal) in
 
     print("Force exited the testing!! 😮")
-
-    //Cleanup
-    ShapeshifterController.sharedInstance.stopShapeshifterClient()
-    //AdversaryLabController.sharedInstance.stopAdversaryLabServer()
 
     exit(0)
 }

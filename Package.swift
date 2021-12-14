@@ -15,6 +15,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/OperatorFoundation/AdversaryLabClientSwift",
                  from: "0.3.16"),
+        .package(url: "https://github.com/OperatorFoundation/Canary.git",
+                 from: "1.0.9"),
         .package(url: "https://github.com/OperatorFoundation/Chord.git",
                  from: "0.0.15"),
         .package(url: "https://github.com/OperatorFoundation/Datable",
@@ -42,7 +44,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .executableTarget(
             name: "CanaryLinux",
-            dependencies: ["Chord",
+            dependencies: ["Canary",
+                           "Chord",
                            "Datable",
                            "Gardener",
                            "NetUtils",
