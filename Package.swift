@@ -42,8 +42,7 @@ let package = Package(
                            "ZIPFoundation",
                            .product(name: "ArgumentParser", package: "swift-argument-parser"),
                            .product(name: "Logging", package: "swift-log")
-            ],
-            linkerSettings: [.linkedFramework("Clibsodium")]),
+            ]),
         .testTarget(
             name: "CanaryLinuxTests",
             dependencies: ["CanaryLinux"]),
