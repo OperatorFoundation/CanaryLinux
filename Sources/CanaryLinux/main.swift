@@ -85,6 +85,8 @@ struct CanaryTest: ParsableCommand
         
         let canary = Canary(serverIP: serverIP, configPath: rPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false)
         
+        print("Created a Canary instance. Preparing to run tests...")
+        
         canary.runTest()
     }
     
@@ -134,19 +136,7 @@ struct CanaryTest: ParsableCommand
             return false
         }
         
-        // Is the transport server running
-//        if !allTransports.isEmpty
-//        {
-//            guard let _ = Transmission.Connection(host: serverIP, port: Int(string: allTransports[0].port), type: .tcp)
-//            else
-//            {
-//                print("Failed to connect to the transport server.")
-//                return false
-//            }
-//        }
-        
         // Does the Resources Directory Exist
-        
         guard let rPath = resourceDirPath
         else
         {
