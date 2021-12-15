@@ -88,6 +88,7 @@ struct CanaryTest: ParsableCommand
         print("Created a Canary instance. Preparing to run tests...")
         
         canary.runTest()
+        print(globalRunningLog.logString)
     }
     
     func guessUserInterface() -> String?
