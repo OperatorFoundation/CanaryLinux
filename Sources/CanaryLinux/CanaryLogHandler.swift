@@ -45,7 +45,7 @@ extension CanaryLogHandler: LogHandler
         
         DispatchQueue.main.async
         {
-            //globalRunningLog.logString += message.description
+            // globalRunningLog.logString += message.description
             print(message.description)
         }
         
