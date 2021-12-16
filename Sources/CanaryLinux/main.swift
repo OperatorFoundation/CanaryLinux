@@ -87,7 +87,7 @@ struct CanaryTest: ParsableCommand
         
         print("Created a Canary instance. Preparing to run tests...")
         
-        canary.runTest()
+        canary.runTest(runAsync: false)
         
         print("Finished running tests!")
     }
