@@ -42,7 +42,14 @@ let package = Package(
                            "ZIPFoundation",
                            .product(name: "ArgumentParser", package: "swift-argument-parser"),
                            .product(name: "Logging", package: "swift-log")
-            ]),
+            ],
+            linkerSettings: [
+                         .linkedLibrary("icui18n"),
+                         .linkedLibrary("icuuc"),
+                         .linkedLibrary("icudata"),
+                         .linkedLibrary("z"),
+                         .linkedLibrary("lzma")
+                       ]),
         .testTarget(
             name: "CanaryLinuxTests",
             dependencies: ["CanaryLinux"]),
