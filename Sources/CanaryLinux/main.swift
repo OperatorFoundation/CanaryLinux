@@ -22,6 +22,7 @@
 
 import ArgumentParser
 import Foundation
+import Logging
 
 import Canary
 import NetUtils
@@ -35,14 +36,17 @@ struct CanaryTest: ParsableCommand
     @Argument(help: "IP address for the transport server.")
     var serverIP: String
     
-    @Argument(help: "Optionally set the path to the directory where Canary's required resources can be found. It is recommended that you only use this if the default directory does not work for you.")
-    var resourceDirPath: String?
+    @Argument(help: "The path to the directory where the transport specific config files can be found.")
+    var resourceDirPath: String
     
     @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
     var numberOfTimesToRun: Int = 1
     
     @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
     var interface: String?
+    
+    @Flag(name: NameSpecification.shortAndLong, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
+    var runWebTests: Bool = false
     
     func validate() throws
     {
@@ -57,6 +61,10 @@ struct CanaryTest: ParsableCommand
     ///  a csv file and song data (zipped) are saved with the test results.
     func run()
     {
+        // Setup our logger
+        LoggingSystem.bootstrap(StreamLogHandler.standardError)
+        uiLog.logLevel = .debug
+        
         guard let rPath = resourceDirPath
         else
         {
@@ -83,7 +91,7 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        let canary = Canary(serverIP: serverIP, configPath: rPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false)
+        let canary = Canary(serverIP: serverIP, configPath: rPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false, runWebTests: runWebTests)
         
         print("Created a Canary instance. Preparing to run tests...")
         

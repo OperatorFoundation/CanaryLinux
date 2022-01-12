@@ -11,7 +11,7 @@ import Logging
 public struct CanaryLogHandler
 {
     public var metadata = Logger.Metadata()
-    public var logLevel = Logger.Level.info
+    public var logLevel = Logger.Level.debug
 
     private let label: String
 
