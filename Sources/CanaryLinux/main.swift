@@ -64,13 +64,6 @@ struct CanaryTest: ParsableCommand
         // Setup our logger
         LoggingSystem.bootstrap(StreamLogHandler.standardError)
         uiLog.logLevel = .debug
-        
-        guard let rPath = resourceDirPath
-        else
-        {
-            print("\nPlease include your config file path")
-            return
-        }
                 
         // Make sure we have everything we need first
         guard checkSetup() else { return }
@@ -91,7 +84,7 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        let canary = Canary(serverIP: serverIP, configPath: rPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false, runWebTests: runWebTests)
+        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false, runWebTests: runWebTests)
         
         print("Created a Canary instance. Preparing to run tests...")
         
@@ -147,17 +140,10 @@ struct CanaryTest: ParsableCommand
         }
         
         // Does the Resources Directory Exist
-        guard let rPath = resourceDirPath
+        guard FileManager.default.fileExists(atPath: resourceDirPath)
         else
         {
-            print("\nPlease include your config file path")
-            return false
-        }
-        
-        guard FileManager.default.fileExists(atPath: rPath)
-        else
-        {
-            print("Resource directory does not exist at \(rPath).")
+            print("Resource directory does not exist at \(resourceDirPath).")
             return false
         }
         
