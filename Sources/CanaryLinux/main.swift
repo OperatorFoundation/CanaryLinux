@@ -39,18 +39,18 @@ struct CanaryTest: ParsableCommand
     @Argument(help: "The path to the directory where the transport specific config files can be found.")
     var resourceDirPath: String
     
-    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
-    var numberOfTimesToRun: Int = 1
+    @Option(name: NameSpecification.short, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
+    var rounds: Int = 1
     
-    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
+    @Option(name: NameSpecification.short, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
     var interface: String?
     
-    @Flag(name: NameSpecification.shortAndLong, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
-    var runWebTests: Bool = false
+    @Flag(name: NameSpecification.short, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
+    var webTests: Bool = false
     
     func validate() throws
     {
-        guard numberOfTimesToRun >= 1 && numberOfTimesToRun <= 15
+        guard rounds >= 1 && rounds <= 15
         else
         {
             throw ValidationError("'<runs>' must be at least 1 and no more than 15.")
@@ -84,7 +84,7 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, logger: uiLog, timesToRun: numberOfTimesToRun, interface: interfaceName, debugPrints: false, runWebTests: runWebTests)
+        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
         
         print("Created a Canary instance. Preparing to run tests...")
         
@@ -146,39 +146,6 @@ struct CanaryTest: ParsableCommand
             print("Resource directory does not exist at \(resourceDirPath).")
             return false
         }
-        
-        // Does it contain the files we need
-        // One config for every transport being tested
-//        for transport in allTransports
-//        {
-//            switch transport
-//            {
-//            case shadowsocks:
-//                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(shSocksFilePath)")
-//                else
-//                {
-//                    print("Shadowsocks config not found at \(resourcesDirectoryPath)/\(shSocksFilePath)")
-//                    return false
-//                }
-//            case replicant:
-//                guard FileManager.default.fileExists(atPath:"\(resourcesDirectoryPath)/\(replicantFilePath)")
-//                else
-//                {
-//                    print("Replicant config not found at \(resourcesDirectoryPath)/\(replicantFilePath)")
-//                    return false
-//                }
-//            default:
-//                print("Tried to test a transport that has no config file. Transport name: \(transport.name)")
-//            }
-//        }
-        
-        // If this is Ubuntu, do we have the shapeshifter binary that we need
-//        guard FileManager.default.fileExists(atPath: "\(resourcesDirectoryPath)/\(shShifterResourcePath)")
-//        else
-//        {
-//            print("Shapeshifter binary was not found at \(resourcesDirectoryPath)/\(shShifterResourcePath). Shapeshifter Dispatcher is required in order to run Canary on Linux systems.")
-//            return false
-//        }
         
         return true
     }
