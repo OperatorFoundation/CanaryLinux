@@ -39,13 +39,16 @@ struct CanaryTest: ParsableCommand
     @Argument(help: "The path to the directory where the transport specific config files can be found.")
     var resourceDirPath: String
     
-    @Option(name: NameSpecification.short, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
+    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the directory where the results should be saved.")
+    var savePath: String?
+    
+    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
     var rounds: Int = 1
     
-    @Option(name: NameSpecification.short, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
+    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
     var interface: String?
     
-    @Flag(name: NameSpecification.short, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
+    @Flag(name: NameSpecification.shortAndLong, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
     var webTests: Bool = false
     
     func validate() throws
@@ -84,7 +87,7 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
+        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, savePath: savePath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
         
         print("Created a Canary instance. Preparing to run tests...")
         
