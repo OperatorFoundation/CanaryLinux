@@ -65,8 +65,9 @@ struct CanaryTest: ParsableCommand
     func run()
     {
         // Setup our logger
-        LoggingSystem.bootstrap(StreamLogHandler.standardError)
-        uiLog.logLevel = .debug
+//        LoggingSystem.bootstrap(StreamLogHandler.standardError)
+//        uiLog.logLevel = .debug
+        print("Skipping logger setup")
                 
         // Make sure we have everything we need first
         guard checkSetup() else { return }
