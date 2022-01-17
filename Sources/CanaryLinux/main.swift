@@ -56,7 +56,7 @@ struct CanaryTest: ParsableCommand
         guard rounds >= 1 && rounds <= 15
         else
         {
-            throw ValidationError("'<runs>' must be at least 1 and no more than 15.")
+            throw ValidationError("'<rounds>' must be at least 1 and no more than 15.")
         }
     }
     
@@ -88,7 +88,7 @@ struct CanaryTest: ParsableCommand
             interfaceName = name
         }
         
-        let canary = Canary(serverIP: serverIP, configPath: resourceDirPath, savePath: savePath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
+        let canary = Canary(configPath: resourceDirPath, savePath: savePath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
         
         print("Created a Canary instance. Preparing to run tests...")
         
