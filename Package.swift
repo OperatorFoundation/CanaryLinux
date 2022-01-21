@@ -19,8 +19,6 @@ let package = Package(
         .package(url: "https://github.com/OperatorFoundation/Gardener", from: "0.0.48"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.4.1"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
-//        .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.11"),
-//        .package(url: "https://github.com/OperatorFoundation/SwiftHexTools.git", from: "1.2.4"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -31,8 +29,6 @@ let package = Package(
                            "Chord",
                            "Datable",
                            "Gardener",
-//                           "SwiftHexTools",
-//                           "ZIPFoundation",
                            .product(name: "ArgumentParser", package: "swift-argument-parser"),
                            .product(name: "Logging", package: "swift-log")
                        ]),

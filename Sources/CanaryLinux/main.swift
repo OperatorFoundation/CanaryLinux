@@ -33,9 +33,6 @@ import Glibc
 
 struct CanaryTest: ParsableCommand
 {
-    @Argument(help: "IP address for the transport server.")
-    var serverIP: String
-    
     @Argument(help: "The path to the directory where the transport specific config files can be found.")
     var resourceDirPath: String
     
@@ -48,7 +45,7 @@ struct CanaryTest: ParsableCommand
     @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the interface name.")
     var interface: String?
     
-    @Flag(name: NameSpecification.shortAndLong, help: "When this flag is tests Canary will also run web tests. By default web tests are not run.")
+    @Flag(name: NameSpecification.shortAndLong, help: "When this flag is set Canary will also run web tests. By default web tests are not run.")
     var webTests: Bool = false
     
     func validate() throws
@@ -64,11 +61,6 @@ struct CanaryTest: ParsableCommand
     ///  a csv file and song data (zipped) are saved with the test results.
     func run()
     {
-        // Setup our logger
-//        LoggingSystem.bootstrap(StreamLogHandler.standardError)
-//        uiLog.logLevel = .debug
-        print("Skipping logger setup")
-                
         // Make sure we have everything we need first
         guard checkSetup() else { return }
         
