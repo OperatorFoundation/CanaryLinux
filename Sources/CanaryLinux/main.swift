@@ -91,18 +91,12 @@ struct CanaryTest: ParsableCommand
     
     func guessUserInterface() -> String?
     {
-        var allInterfaces = Interface.allInterfaces()
+        let allInterfaces = Interface.allInterfaces()
         
         // Remove any interfaces named "lo" these are not useful to us
-        for (thisIndex, thisInterface) in allInterfaces.enumerated()
-        {
-            if thisInterface.name == ("lo")
-            {
-                allInterfaces.remove(at: thisIndex)
-            }
-        }
+        var filteredInterfaces = allInterfaces.filter({ $0.name != "lo"})
         
-        guard !allInterfaces.isEmpty
+        guard !filteredInterfaces.isEmpty
         else
         {
             print("\n ‼️We were unable to identify a likely interface name. Please try running the program again using the correct interface name for your system.\n")
@@ -111,21 +105,21 @@ struct CanaryTest: ParsableCommand
         }
         
         // Get interfaces sorted by name
-        allInterfaces.sort(by: {
+        filteredInterfaces.sort(by: {
             (interfaceA, interfaceB) -> Bool in
             
             return interfaceA.name < interfaceB.name
         })
         
         print("\nYou did not indicate a preferred interface. Printing all available interfaces.")
-        for interface in allInterfaces { print("\(interface.name)")}
+        for interface in filteredInterfaces { print("\(interface.name)")}
         
         var bestGuessIndex: Int
         
         // Return the first interface that begins with the letter e
         // Note: this is just a best guess based on what we understand to be a common scenario
         // The user should use the interface flag if they have something different
-        if let eNameIndex = allInterfaces.firstIndex(where: { $0.name.hasPrefix("e") })
+        if let eNameIndex = filteredInterfaces.firstIndex(where: { $0.name.hasPrefix("e") })
         {
             bestGuessIndex = eNameIndex
         }
@@ -134,9 +128,9 @@ struct CanaryTest: ParsableCommand
             bestGuessIndex = 0
         }
 
-        print("\n⚠️ We will try using the \(allInterfaces[bestGuessIndex].name) interface. If Canary fails to capture data, it may be because this is not the correct interface. Please try running the program again using the interface flag and one of the other listed interfaces.\n")
+        print("\n⚠️ We will try using the \(filteredInterfaces[bestGuessIndex].name) interface. If Canary fails to capture data, it may be because this is not the correct interface. Please try running the program again using the interface flag and one of the other listed interfaces.\n")
         
-        return allInterfaces[bestGuessIndex].name
+        return filteredInterfaces[bestGuessIndex].name
     }
     
     func checkSetup() -> Bool
