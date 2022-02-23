@@ -36,7 +36,7 @@ struct CanaryTest: ParsableCommand
     @Argument(help: "The path to the directory where the transport specific config files can be found.")
     var resourceDirPath: String
     
-    @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help: "Optionally specify the directory where the results should be saved.")
+    @Option(name: .shortAndLong, parsing: .next, help: "Optionally specify the directory where the results should be saved.")
     var savePath: String?
     
     @Option(name: NameSpecification.shortAndLong, parsing: SingleValueParsingStrategy.next, help:"Set how many times you would like Canary to run its tests.")
