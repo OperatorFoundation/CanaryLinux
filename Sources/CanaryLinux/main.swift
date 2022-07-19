@@ -50,20 +50,38 @@ struct CanaryTest: ParsableCommand
     
     func validate() throws
     {
+        // Do we have root privileges?
+        #if os(macOS)
+        let euid = Darwin.geteuid()
+        #else
+        let euid = Glibc.geteuid()
+        #endif
+        
+        guard euid == 0
+        else
+        {
+            throw ValidationError("You must run this program as root: sudo ./Canary <transport server IP>")
+        }
+        
+        // Does the Resources Directory Exist
+        guard FileManager.default.fileExists(atPath: resourceDirPath)
+        else
+        {
+            throw ValidationError("Resource directory does not exist at \(resourceDirPath).")
+        }
+        
         guard rounds >= 1 && rounds <= 15
         else
         {
             throw ValidationError("'<rounds>' must be at least 1 and no more than 15.")
         }
+        
     }
     
     /// launch AdversaryLabClient to capture our test traffic, and run a connection test.
     ///  a csv file and song data (zipped) are saved with the test results.
     func run()
     {
-        // Make sure we have everything we need first
-        guard checkSetup() else { return }
-        
         var interfaceName: String
         
         if interface != nil
@@ -82,11 +100,11 @@ struct CanaryTest: ParsableCommand
         
         let canary = Canary(configPath: resourceDirPath, savePath: savePath, logger: uiLog, timesToRun: rounds, interface: interfaceName, debugPrints: false, runWebTests: webTests)
         
-        print("Created a Canary instance. Preparing to run tests...")
+        print("Canary is preparing to run tests...")
         
         canary.runTest(runAsync: false)
         
-        print("Finished running tests!")
+        print("Canary testing is complete!")
     }
     
     func guessUserInterface() -> String?
@@ -131,34 +149,6 @@ struct CanaryTest: ParsableCommand
         print("\n⚠️ We will try using the \(filteredInterfaces[bestGuessIndex].name) interface. If Canary fails to capture data, it may be because this is not the correct interface. Please try running the program again using the interface flag and one of the other listed interfaces.\n")
         
         return filteredInterfaces[bestGuessIndex].name
-    }
-    
-    func checkSetup() -> Bool
-    {
-        // Do we have root privileges?
-        #if os(macOS)
-        let euid = Darwin.geteuid()
-        #else
-        let euid = Glibc.geteuid()
-        #endif
-        
-        guard euid == 0
-        else
-        {
-            print("\nYou must run this program as root.")
-            print("example: sudo ./Canary <transport server IP>")
-            return false
-        }
-        
-        // Does the Resources Directory Exist
-        guard FileManager.default.fileExists(atPath: resourceDirPath)
-        else
-        {
-            print("Resource directory does not exist at \(resourceDirPath).")
-            return false
-        }
-        
-        return true
     }
 }
 

@@ -14,9 +14,9 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/OperatorFoundation/Canary.git", branch: "main"),
-        .package(url: "https://github.com/OperatorFoundation/Chord.git", from: "0.0.15"),
-        .package(url: "https://github.com/OperatorFoundation/Datable", from: "3.1.5"),
-        .package(url: "https://github.com/OperatorFoundation/Gardener", from: "0.0.48"),
+        .package(url: "https://github.com/OperatorFoundation/Chord.git", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
+        .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "main"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.2"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
     ],
