@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "CanaryLinux",
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v12)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .executable(
@@ -16,7 +16,6 @@ let package = Package(
         .package(url: "https://github.com/OperatorFoundation/Canary.git", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Chord.git", branch: "main"),
         .package(url: "https://github.com/OperatorFoundation/Datable", branch: "main"),
-        .package(url: "https://github.com/OperatorFoundation/Gardener", branch: "main"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.2"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
     ],
@@ -28,7 +27,6 @@ let package = Package(
             dependencies: ["Canary",
                            "Chord",
                            "Datable",
-                           "Gardener",
                            .product(name: "ArgumentParser", package: "swift-argument-parser"),
                            .product(name: "Logging", package: "swift-log")
                        ]),
