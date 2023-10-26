@@ -17,5 +17,5 @@ Currently Shadowsocks and Replicant tests are supported. If a different transpor
 - You must run Canary with sudo in order for it to capture any data
 - To run Canary with default settings simply provide the config directory for the transports you want to test as an argument:
 
-`sudo <path-to-canarylinux-executable> <path-to-config-directory>`
+`sudo <path-to-canarylinux-executable> <path-to-config-directory>` <br />
 (ex. sudo .build/x86_64-unknown-linux-gnu/debug/CanaryLinux /home/configdirectory)
