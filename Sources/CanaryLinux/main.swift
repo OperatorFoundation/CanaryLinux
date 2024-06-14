@@ -102,9 +102,11 @@ struct CanaryTest: ParsableCommand
         
         print("Canary is preparing to run tests...")
         
-        canary.runTest(runAsync: false)
-        
-        print("Canary testing is complete!")
+        Task 
+        {
+            await canary.runTest()
+            print("Canary testing is complete!")
+        }
     }
     
     func guessUserInterface() -> String?
