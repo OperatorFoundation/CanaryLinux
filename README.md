@@ -3,7 +3,7 @@ A command line tool for testing transport connections and gathering the packets 
 
 Canary will run a series of transport tests based on the configs that you provide. It is possible to test each transport on a different transport server based on what host information is provided in the transport config files. 
 
-Currently Shadowsocks and Replicant tests are supported. If a different transport needs to be tested, Replicant can be setup to mimic other transports.
+Currently Shadow and Starbridge tests are supported.
 
 *Currently in development*
 
